@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">My Bibit</string>
+    <string name="home">Home</string>
+    <string name="riwayat">Riwayat</string>
+    <string name="user">User</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="konfir_pass">Confirm Password</string>
+    <string name="phone">Phone</string>
+    <string name="default_notification_channel_id" translatable="false">tokoonlinebibit</string>
+    <string name="simpan">Simpan</string>
+</resources>

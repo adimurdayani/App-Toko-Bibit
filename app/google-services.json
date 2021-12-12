@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "756130386809",
+    "project_id": "tokoonlinebibit",
+    "storage_bucket": "tokoonlinebibit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756130386809:android:e981643018af741f2b55a8",
+        "android_client_info": {
+          "package_name": "com.uci.mybibit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756130386809-mis6f0cm5sckfg1a61lscieqvdgkv5mi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKFbj9-ZD1lNrdh37UIrIuXSC0KmRR0as"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756130386809-mis6f0cm5sckfg1a61lscieqvdgkv5mi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
