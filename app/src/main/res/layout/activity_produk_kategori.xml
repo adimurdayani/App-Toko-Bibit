@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green_muda"
+    android:background="@color/grey1"
     android:orientation="vertical"
-    tools:context=".activity.ProdukTerlaris">
+    tools:context=".activity.ProdukKategoriActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/top"
@@ -36,31 +36,29 @@
                 android:layout_centerInParent="true"
                 android:fontFamily="@font/poppins_medium"
                 android:maxLines="1"
-                android:text="Produk Terlaris"
+                android:text="Nama Kategori Produk"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="120dp">
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_cari"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
-        <LinearLayout
+        <SearchView
+            android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:focusable="true"
+            android:queryHint="Search data" />
 
-            <SearchView
-                android:id="@+id/search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/sw_data"
@@ -77,5 +75,4 @@
             android:paddingBottom="15dp"
             tools:listitem="@layout/item_all_produk" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 </LinearLayout>

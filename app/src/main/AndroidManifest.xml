@@ -4,6 +4,7 @@
     package="com.uci.mybibit">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -15,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyBibit"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.ProdukTerbaru"></activity>
+        <activity android:name=".activity.ProdukKategoriActivity"></activity>
+        <activity android:name=".activity.AllProdukActivity" />
+        <activity android:name=".activity.ProdukTerbaru" />
         <activity android:name=".activity.ProdukTerlaris" />
         <activity android:name=".activity.Tentang" />
         <activity android:name=".activity.Bantuan" />

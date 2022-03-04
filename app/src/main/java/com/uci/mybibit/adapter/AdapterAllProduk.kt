@@ -17,15 +17,17 @@ import com.uci.mybibit.R
 import com.uci.mybibit.activity.DetailActivity
 import com.uci.mybibit.helper.Helper
 import com.uci.mybibit.model.Produk
+import com.uci.mybibit.model.ProdukAll
 import com.uci.mybibit.util.Util
 import java.util.*
 
-class AdapterAllProduk(var activity: Activity, var data: ArrayList<Produk>) :
+class AdapterAllProduk(var activity: Activity, var data: ArrayList<ProdukAll>) :
     RecyclerView.Adapter<AdapterAllProduk.HolderData>() {
     class HolderData(view: View) : RecyclerView.ViewHolder(view) {
         val tv_nama = view.findViewById<TextView>(R.id.nama_produk)
         val tv_harga = view.findViewById<TextView>(R.id.harga)
         val tv_gambar = view.findViewById<ImageView>(R.id.image)
+        val toko = view.findViewById<TextView>(R.id.toko)
         val layout = view.findViewById<CardView>(R.id.layout)
     }
 
@@ -38,6 +40,7 @@ class AdapterAllProduk(var activity: Activity, var data: ArrayList<Produk>) :
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: HolderData, position: Int) {
         holder.tv_nama.text = data[position].name
+        holder.toko.text = data[position].user.nama_toko
         holder.tv_harga.text = Helper().formatRupiah(data[position].harga)
             .format(Integer.valueOf(data[position].harga))
         val imageUrl =
@@ -50,7 +53,7 @@ class AdapterAllProduk(var activity: Activity, var data: ArrayList<Produk>) :
 
         holder.layout.setOnClickListener {
             val intent = Intent(activity, DetailActivity::class.java)
-            val str = Gson().toJson(data[position], Produk::class.java)
+            val str = Gson().toJson(data[position], ProdukAll::class.java)
             intent.putExtra("extra", str)
             activity.startActivity(intent)
         }
@@ -62,7 +65,7 @@ class AdapterAllProduk(var activity: Activity, var data: ArrayList<Produk>) :
 
     private var searchData: Filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence): FilterResults {
-            val searchList: java.util.ArrayList<Produk> = java.util.ArrayList<Produk>()
+            val searchList: java.util.ArrayList<ProdukAll> = java.util.ArrayList<ProdukAll>()
             if (constraint.toString().isEmpty()) {
                 searchList.addAll(data)
             } else {
@@ -81,7 +84,7 @@ class AdapterAllProduk(var activity: Activity, var data: ArrayList<Produk>) :
 
         override fun publishResults(constraint: CharSequence, results: FilterResults) {
             data.clear()
-            data.addAll(results.values as Collection<Produk>)
+            data.addAll(results.values as Collection<ProdukAll>)
             notifyDataSetChanged()
         }
     }

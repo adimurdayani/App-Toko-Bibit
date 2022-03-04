@@ -148,6 +148,7 @@ class PengirimanActivity : AppCompatActivity() {
         checkout.detail_lokasi = tv_alamat.text.toString()
         checkout.total_transfer = "" + (totalHarga + Integer.valueOf(ongkir))
         checkout.produks = produks
+        checkout.toko_id = listProduk[0].user_id.toString()
 
         val json = Gson().toJson(checkout, Checkout::class.java)
         Log.d("Response: ", "json: $json")
@@ -188,7 +189,7 @@ class PengirimanActivity : AppCompatActivity() {
 
     fun getOngkir(kurir: String) {
         val alamat = myDb.daoAlamat().getBystatus(true)
-        val origin = "501"
+        val origin = "328"
         val destination = "" + alamat?.id_kota.toString()
         val berat = 1000
 

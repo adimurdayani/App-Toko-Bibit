@@ -35,9 +35,17 @@ interface ApiService {
     @GET("produk")
     fun produk(): Call<ResponsModel>
 
+    @GET("daftar_toko")
+    fun daftar_toko(): Call<ResponsModel>
+
     @GET("produk/kategori/{kategori_id}")
     fun produkId(
         @Path("kategori_id") kategori_id: Int
+    ): Call<ResponsModel>
+
+    @GET("produk/produk_user/{user_id}")
+    fun produk_user(
+        @Path("user_id") user_id: Int
     ): Call<ResponsModel>
 
     @GET("produk/kategori_nolimit/{kategori_id}")

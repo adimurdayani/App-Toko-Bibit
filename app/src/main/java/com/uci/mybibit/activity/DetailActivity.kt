@@ -20,8 +20,10 @@ import com.uci.mybibit.adapter.AdapterProduk
 import com.uci.mybibit.api.ApiConfig
 import com.uci.mybibit.helper.Helper
 import com.uci.mybibit.model.Produk
+import com.uci.mybibit.model.ProdukAll
 import com.uci.mybibit.model.ResponsModel
 import com.uci.mybibit.room.MyDatabase
+import com.uci.mybibit.util.Util
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -40,12 +42,15 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var btn_kembali: ImageView
     lateinit var btn_keranjang: ImageView
     lateinit var btn_notifikasi: ImageView
-    lateinit var btn_favorit: ImageView
     private lateinit var btn_beli: LinearLayout
     lateinit var produk: Produk
+    lateinit var produk2: ProdukAll
     lateinit var myDb: MyDatabase
     lateinit var div_angka: RelativeLayout
     lateinit var tv_angka: TextView
+    lateinit var berat: TextView
+    lateinit var stok: TextView
+    lateinit var email: TextView
     lateinit var rc_data: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,15 +66,17 @@ class DetailActivity : AppCompatActivity() {
     private fun getDetail() {
         val data = intent.getStringExtra("extra")
         produk = Gson().fromJson<Produk>(data, Produk::class.java)
+        produk2 = Gson().fromJson<ProdukAll>(data, ProdukAll::class.java)
 
         txt_namaproduk.text = produk.name
         txt_hargaproduk.text = Helper().formatRupiah(produk.harga)
         txt_deskripsi.text = produk.deskripsi
         namabarang.text = produk.name
-        val imageUrl =
-            "http://192.168.43.68/tokoonlinebibit/public/storage/produk/" + produk.image
+        berat.text = produk.berat
+        stok.text = produk.stok
+        email.text = produk2.user.email
         Picasso.get()
-            .load(imageUrl)
+            .load(Util.produkUrl + produk.image)
             .placeholder(R.drawable.jagung)
             .error(R.drawable.jagung)
             .into(image)
@@ -88,18 +95,9 @@ class DetailActivity : AppCompatActivity() {
         }
 
         btn_notifikasi.setOnClickListener {
-            val intent  = Intent("event:keranjang")
+            val intent = Intent("event:keranjang")
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
             onBackPressed()
-        }
-
-        btn_favorit.setOnClickListener {
-            val listKeranjang = myDb.daoKeranjang().getAll() // get All data
-            for (produk: Produk in listKeranjang) {
-                println("-----------------------")
-                println(produk.name)
-                println(produk.harga)
-            }
         }
 
         btn_beli.setOnClickListener {
@@ -110,37 +108,41 @@ class DetailActivity : AppCompatActivity() {
                 produkData.jumlah = produkData.jumlah + 1
                 update(produkData)
             }
-            val intent  = Intent("event:keranjang")
+            val intent = Intent("event:keranjang")
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
             onBackPressed()
         }
     }
 
-    private fun displayProduk(){
+    private fun displayProduk() {
         val layoutManager = GridLayoutManager(this, 2)
 
         rc_data.adapter = AdapterProduk(this, listProduk)
         rc_data.layoutManager = layoutManager
     }
 
-    private var listProduk: ArrayList<Produk> = ArrayList()
+    private var listProduk: ArrayList<ProdukAll> = ArrayList()
     private fun getProduk() {
-        ApiConfig.instanceRetrofit.produkId(1).enqueue(object : Callback<ResponsModel> {
-            override fun onResponse(
-                call: Call<ResponsModel>,
-                response: Response<ResponsModel>
-            ) {
-                val res = response.body()!!
-                if (res.success == 1) {
-                    listProduk = res.produk
-                    displayProduk()
+        val data = intent.getStringExtra("extra")
+        produk = Gson().fromJson<Produk>(data, Produk::class.java)
+        ApiConfig.instanceRetrofit.produkId(produk.kategori_id)
+            .enqueue(object : Callback<ResponsModel> {
+                override fun onResponse(
+                    call: Call<ResponsModel>,
+                    response: Response<ResponsModel>,
+                ) {
+                    val res = response.body()!!
+                    if (res.success == 1) {
+                        listProduk = res.produk_id
+                        displayProduk()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<ResponsModel>, t: Throwable) {
-            }
-        })
+                override fun onFailure(call: Call<ResponsModel>, t: Throwable) {
+                }
+            })
     }
+
     fun insert() {
         CompositeDisposable().add(Observable.fromCallable { myDb.daoKeranjang().insert(produk) }
             .subscribeOn(Schedulers.computation())
@@ -173,7 +175,7 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setIni(){
+    private fun setIni() {
         txt_namaproduk = findViewById(R.id.nama_p)
         txt_hargaproduk = findViewById(R.id.harga_produk)
         image = findViewById(R.id.image_produk)
@@ -184,9 +186,11 @@ class DetailActivity : AppCompatActivity() {
         btn_notifikasi = findViewById(R.id.btn_notifikasi)
         div_angka = findViewById(R.id.div_angka)
         tv_angka = findViewById(R.id.tv_angka)
-        btn_favorit = findViewById(R.id.btn_favorit)
         btn_beli = findViewById(R.id.btn_beli1)
         rc_data = findViewById(R.id.rc_data)
+        berat = findViewById(R.id.berat)
+        stok = findViewById(R.id.stok)
+        email = findViewById(R.id.email)
     }
 
     override fun onResume() {

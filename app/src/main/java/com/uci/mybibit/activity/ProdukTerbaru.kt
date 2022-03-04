@@ -16,6 +16,7 @@ import com.uci.mybibit.R
 import com.uci.mybibit.adapter.AdapterAllProduk
 import com.uci.mybibit.api.ApiConfig
 import com.uci.mybibit.model.Produk
+import com.uci.mybibit.model.ProdukAll
 import com.uci.mybibit.model.ResponsModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -64,7 +65,7 @@ class ProdukTerbaru : AppCompatActivity() {
         })
     }
 
-    private var listProduk: ArrayList<Produk> = ArrayList()
+    private var listProduk: ArrayList<ProdukAll> = ArrayList()
     private fun getProduk() {
         sw_data.isRefreshing = true
         ApiConfig.instanceRetrofit.produkIdAll(1).enqueue(object : Callback<ResponsModel> {

@@ -12,9 +12,10 @@ class Checkout {
     lateinit var ongkir: String
     lateinit var total_transfer: String
     lateinit var bank: String
+    lateinit var toko_id: String
     var produks = ArrayList<Item>()
 
-    class Item{
+    class Item {
         lateinit var id: String
         lateinit var total_item: String
         lateinit var total_harga: String
