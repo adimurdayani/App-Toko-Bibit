@@ -23,6 +23,7 @@ class Transaksi {
     var ongkir = ""
     var total_transfer = ""
     var bank = ""
+    var toko_id = 0
 
     var details = ArrayList<DetailTransaksi>()
 

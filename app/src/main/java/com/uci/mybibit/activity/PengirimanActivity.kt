@@ -58,10 +58,12 @@ class PengirimanActivity : AppCompatActivity() {
 
     lateinit var myDb: MyDatabase
     var totalHarga = 0
+    lateinit var s: SharedPref
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pengiriman)
+        s = SharedPref(this)
         myDb = MyDatabase.getInstance(this)!!
         setInit()
 
@@ -86,7 +88,7 @@ class PengirimanActivity : AppCompatActivity() {
                     parent: AdapterView<*>?,
                     view: View?,
                     position: Int,
-                    id: Long
+                    id: Long,
                 ) {
                     if (position != 0) {
                         getOngkir(sp_metode.selectedItem.toString())
@@ -161,6 +163,7 @@ class PengirimanActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun cekalamat() {
+        val id = s.getUser()!!.id
         if (myDb.daoAlamat().getBystatus(true) != null) {
             div_alamat.visibility = View.VISIBLE
             div_kosong.visibility = View.GONE
@@ -204,7 +207,7 @@ class PengirimanActivity : AppCompatActivity() {
             .enqueue(object : Callback<ResponsOngkir> {
                 override fun onResponse(
                     call: Call<ResponsOngkir>,
-                    response: Response<ResponsOngkir>
+                    response: Response<ResponsOngkir>,
                 ) {
                     if (response.isSuccessful) {
                         sw_data.isRefreshing = false

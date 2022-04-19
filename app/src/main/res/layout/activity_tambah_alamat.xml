@@ -141,7 +141,7 @@
                 android:background="@color/white"
                 android:visibility="gone">
 
-                <Spinner
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/sp_provinsi"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -157,24 +157,8 @@
                 android:background="@color/white"
                 android:visibility="gone">
 
-                <Spinner
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/sp_kota"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/div_kecamatan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/white"
-                android:visibility="gone">
-
-                <Spinner
-                    android:id="@+id/sp_kecamatan"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp" />

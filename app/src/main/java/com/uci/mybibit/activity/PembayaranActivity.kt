@@ -65,6 +65,7 @@ class PembayaranActivity : AppCompatActivity() {
         val json = intent.getStringExtra("extra")!!.toString()
         val checkout = Gson().fromJson(json, Checkout::class.java)
         checkout.bank = bank.nama
+        Log.d("Toko Id", checkout.toko_id)
 
         dialog.setCancelable(true)
         dialog.setMessage("Loading...")

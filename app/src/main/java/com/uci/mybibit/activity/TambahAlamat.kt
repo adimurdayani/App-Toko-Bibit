@@ -14,6 +14,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.thecode.aestheticdialogs.*
 import com.uci.mybibit.R
 import com.uci.mybibit.api.ApiConfigAlamat
+import com.uci.mybibit.helper.SharedPref
 import com.uci.mybibit.model.Alamat
 import com.uci.mybibit.model.ModelAlamat
 import com.uci.mybibit.model.ResponsModel
@@ -31,11 +32,9 @@ class TambahAlamat : AppCompatActivity() {
     lateinit var btn_kembali: ImageView
     lateinit var sp_prov: Spinner
     lateinit var sp_kota: Spinner
-    lateinit var sp_kecamatan: Spinner
     lateinit var progress: ProgressBar
     lateinit var div_provinsi: RelativeLayout
     lateinit var div_kota: RelativeLayout
-    lateinit var div_kecamatan: RelativeLayout
     lateinit var btn_simpan: CardView
     lateinit var l_name: TextInputLayout
     lateinit var e_name: TextInputEditText
@@ -52,10 +51,12 @@ class TambahAlamat : AppCompatActivity() {
     var provinsi = ModelAlamat.Provinsi()
     var kota = ModelAlamat.Provinsi()
     var kecamatan = ModelAlamat()
+    lateinit var s: SharedPref
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tambah_alamat)
+        s = SharedPref(this)
         setButton()
         getProvinsi()
         getButton()
@@ -82,11 +83,8 @@ class TambahAlamat : AppCompatActivity() {
             Toast.makeText(this, "Silahkan pilih kota", Toast.LENGTH_SHORT).show()
             return
         }
-//        if (kecamatan.id == 0) {
-//            Toast.makeText(this, "Silahkan pilih kecamatan", Toast.LENGTH_SHORT).show()
-//            return
-//        }
         val alamat = Alamat()
+        alamat.id = s.getUser()!!.id
         alamat.name = e_name.text.toString()
         alamat.type = e_alamat.text.toString()
         alamat.phone = e_nohp.text.toString()
@@ -97,8 +95,6 @@ class TambahAlamat : AppCompatActivity() {
         alamat.provinsi = provinsi.province
         alamat.id_kota = Integer.valueOf(kota.city_id)
         alamat.kota = kota.city_name
-//        alamat.id_kecamatan = kecamatan.id
-//        alamat.kecamatan = kecamatan.nama
         insert(alamat)
     }
 
@@ -108,7 +104,7 @@ class TambahAlamat : AppCompatActivity() {
             .enqueue(object : Callback<ResponsModel> {
                 override fun onResponse(
                     call: Call<ResponsModel>,
-                    response: Response<ResponsModel>
+                    response: Response<ResponsModel>,
                 ) {
                     if (response.isSuccessful) {
                         progress.visibility = View.GONE
@@ -135,7 +131,7 @@ class TambahAlamat : AppCompatActivity() {
                                     parent: AdapterView<*>?,
                                     view: View?,
                                     position: Int,
-                                    id: Long
+                                    id: Long,
                                 ) {
                                     if (position != 0) {
                                         provinsi = listPovinsi[position - 1]
@@ -170,7 +166,7 @@ class TambahAlamat : AppCompatActivity() {
             .enqueue(object : Callback<ResponsModel> {
                 override fun onResponse(
                     call: Call<ResponsModel>,
-                    response: Response<ResponsModel>
+                    response: Response<ResponsModel>,
                 ) {
                     if (response.isSuccessful) {
                         progress.visibility = View.GONE
@@ -196,13 +192,12 @@ class TambahAlamat : AppCompatActivity() {
                                     parent: AdapterView<*>?,
                                     view: View?,
                                     position: Int,
-                                    id: Long
+                                    id: Long,
                                 ) {
                                     if (position != 0) {
                                         kota = listArry[position - 1]
                                         val kodepos = kota.postal_code
                                         e_kodepos.setText(kodepos)
-//                                        getKecamatan(idKota.city_id)
                                     }
                                 }
 
@@ -223,60 +218,6 @@ class TambahAlamat : AppCompatActivity() {
 
             })
     }
-
-    fun getKecamatan(id: Int) {
-        progress.visibility = View.VISIBLE
-        ApiConfigAlamat.instanceRetrofit.getKecamatan(id).enqueue(object : Callback<ResponsModel> {
-            override fun onResponse(call: Call<ResponsModel>, response: Response<ResponsModel>) {
-                if (response.isSuccessful) {
-                    progress.visibility = View.GONE
-                    div_kecamatan.visibility = View.VISIBLE
-
-                    val res = response.body()!!
-                    val arrayString = ArrayList<String>()
-                    val arrayList = res.kecamatan
-
-                    arrayString.add("Pilih Kecamatan")
-                    for (kecamatan in arrayList) {
-                        arrayString.add(kecamatan.nama)
-                    }
-                    val adapter = ArrayAdapter<Any>(
-                        this@TambahAlamat,
-                        R.layout.item_spinner,
-                        arrayString.toTypedArray()
-                    )
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    sp_kecamatan.adapter = adapter
-                    sp_kecamatan.onItemSelectedListener =
-                        object : AdapterView.OnItemSelectedListener {
-                            override fun onItemSelected(
-                                parent: AdapterView<*>?,
-                                view: View?,
-                                position: Int,
-                                id: Long
-                            ) {
-                                if (position != 0) {
-                                    kecamatan = arrayList[position - 1]
-                                }
-                            }
-
-                            override fun onNothingSelected(parent: AdapterView<*>?) {
-                            }
-
-                        }
-
-                } else {
-                    Log.d("Error", "gagal memuat data" + response.message())
-                }
-            }
-
-            override fun onFailure(call: Call<ResponsModel>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
-    }
-
     private fun insert(data: Alamat) {
         progress2.visibility = View.VISIBLE
         val myDb = MyDatabase.getInstance(this)!!
@@ -294,7 +235,7 @@ class TambahAlamat : AppCompatActivity() {
                 for (alamat in myDb.daoAlamat().getAll()) {
                     Log.d(
                         "Alamat",
-                        "nama:  " + alamat.name + " - " + alamat.alamat + " - " + alamat.kota+ " - " + alamat.id_kota
+                        "nama:  " + alamat.name + " - " + alamat.alamat + " - " + alamat.kota + " - " + alamat.id_kota
                     )
                 }
             })
@@ -407,11 +348,9 @@ class TambahAlamat : AppCompatActivity() {
         btn_kembali = findViewById(R.id.btn_kembali)
         sp_prov = findViewById(R.id.sp_provinsi)
         sp_kota = findViewById(R.id.sp_kota)
-        sp_kecamatan = findViewById(R.id.sp_kecamatan)
         progress = findViewById(R.id.progressbar)
         div_provinsi = findViewById(R.id.div_provinsi)
         div_kota = findViewById(R.id.div_kota)
-        div_kecamatan = findViewById(R.id.div_kecamatan)
         btn_simpan = findViewById(R.id.btn_simpan)
         l_name = findViewById(R.id.l_name)
         e_name = findViewById(R.id.e_name)
@@ -424,9 +363,12 @@ class TambahAlamat : AppCompatActivity() {
         l_kodepos = findViewById(R.id.l_kodepos)
         e_kodepos = findViewById(R.id.e_kodepos)
         progress2 = findViewById(R.id.progress)
+
+        e_name.setText(s.getUser()!!.name)
+        e_nohp.setText(s.getUser()!!.phone)
     }
 
-    fun sukses(pesan: String){
+    fun sukses(pesan: String) {
         AestheticDialog.Builder(this, DialogStyle.FLAT, DialogType.SUCCESS)
             .setTitle("Sukses")
             .setMessage(pesan)
@@ -441,6 +383,7 @@ class TambahAlamat : AppCompatActivity() {
             })
             .show()
     }
+
     fun error(pesan: String) {
         AestheticDialog.Builder(this, DialogStyle.CONNECTIFY, DialogType.ERROR)
             .setTitle("Error Koneksi")

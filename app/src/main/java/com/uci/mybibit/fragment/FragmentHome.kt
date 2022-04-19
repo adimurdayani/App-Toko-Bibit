@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -28,7 +28,6 @@ import com.uci.mybibit.adapter.AdapterToko
 import com.uci.mybibit.api.ApiConfig
 import com.uci.mybibit.helper.SharedPref
 import com.uci.mybibit.model.DaftarToko
-import com.uci.mybibit.model.Produk
 import com.uci.mybibit.model.ProdukAll
 import com.uci.mybibit.model.ResponsModel
 import com.uci.mybibit.room.MyDatabase
@@ -91,7 +90,7 @@ class FragmentHome : Fragment() {
     }
 
     fun displayProduk() {
-        if (s.getUser()?.name != null) {
+        if (s.getStatusLogin()) {
             nama.visibility = View.VISIBLE
             nama.text = s.getUser()?.name
         } else {
@@ -208,6 +207,14 @@ class FragmentHome : Fragment() {
         btn_notifikasi = view.findViewById(R.id.btn_notifikasi)
         div_angka = view.findViewById(R.id.div_angka)
         tv_angka = view.findViewById(R.id.tv_angka)
+
+        btn_notifikasi.setOnClickListener {
+//            val fragment2 = FragmentKeranjang()
+//            val fragmentManager = fragmentManager
+//            val fragmentTransaction: FragmentTransaction = fragmentManager!!.beginTransaction()
+//            fragmentTransaction.replace(R.id.frm_home, fragment2)
+//            fragmentTransaction.commit()
+        }
     }
 
     override fun onResume() {
@@ -217,4 +224,5 @@ class FragmentHome : Fragment() {
         ceckkeranjang()
         super.onResume()
     }
+
 }

@@ -3,6 +3,7 @@ package com.uci.mybibit.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.thecode.aestheticdialogs.*
 import com.uci.mybibit.R
 import com.uci.mybibit.activity.LoginActivity
 import com.uci.mybibit.activity.PengirimanActivity
@@ -90,11 +92,7 @@ class FragmentKeranjang : Fragment() {
 
     private fun setButton() {
         btn_delete.setOnClickListener {
-            val listDelete = ArrayList<Produk>()
-            for (p in listProduk) {
-                if (p.selected) listDelete.add(p)
-            }
-            delete(listDelete)
+            setDialog("Apakah Anda Yakin?")
         }
         btn_beli.setOnClickListener {
 
@@ -150,6 +148,27 @@ class FragmentKeranjang : Fragment() {
         total = view.findViewById(R.id.total_harga)
         rc_data = view.findViewById(R.id.rc_data)
         cekall = view.findViewById(R.id.cekall)
+    }
+
+    fun setDialog(pesan:String){
+        AestheticDialog.Builder(requireActivity(), DialogStyle.FLAT, DialogType.WARNING)
+            .setTitle(pesan)
+            .setMessage("Keranjang akan terhapus permanen!")
+            .setCancelable(true)
+            .setDarkMode(true)
+            .setGravity(Gravity.CENTER)
+            .setAnimation(DialogAnimation.SHRINK)
+            .setOnClickListener(object : OnDialogClickListener {
+                override fun onClick(dialog: AestheticDialog.Builder) {
+                    dialog.dismiss()
+                    val listDelete = ArrayList<Produk>()
+                    for (p in listProduk) {
+                        if (p.selected) listDelete.add(p)
+                    }
+                    delete(listDelete)
+                }
+            })
+            .show()
     }
 
     override fun onResume() {

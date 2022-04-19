@@ -60,6 +60,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     //    library image
     implementation 'com.squareup.picasso:picasso:2.71828'
+    //    spinner
+    implementation 'com.toptoche.searchablespinner:searchablespinnerlibrary:1.3.1'
     //SQLite
     def room_version = "2.2.4"
     implementation "androidx.room:room-runtime:$room_version"

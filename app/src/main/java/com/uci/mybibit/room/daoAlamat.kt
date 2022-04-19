@@ -14,11 +14,17 @@ interface DaoAlamat {
     @Delete
     fun delete(data: Alamat)
 
+    @Delete
+    fun delete(data: List<Alamat>)
+
     @Update
     fun update(data: Alamat): Int
 
     @Query("SELECT * from alamat ORDER BY id ASC")
     fun getAll(): List<Alamat>
+
+    @Query("SELECT * from alamat WHERE id = :id ORDER BY id ASC")
+    fun getIdAlamat(id: Int): List<Alamat>
 
     @Query("SELECT * FROM alamat WHERE id = :id LIMIT 1")
     fun getAlamat(id: Int): Alamat
